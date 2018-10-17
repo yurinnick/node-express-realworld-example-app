@@ -8,6 +8,7 @@ var http = require('http'),
     passport = require('passport'),
     errorhandler = require('errorhandler'),
     mongoose = require('mongoose');
+    config = require('./config/index.js');
 
 var isProduction = process.env.NODE_ENV === 'production';
 
@@ -30,10 +31,28 @@ if (!isProduction) {
   app.use(errorhandler());
 }
 
+const mongoHostname = config.get('database').hostname;
+const mongoPort = config.get('database').port;
+const mongoOptions = {
+  dbName: config.get('database').db_name,
+  useNewUrlParser: true
+};
+
+if (config.get('database').auth == true) {
+  mongoOptions.user = config.get('database').username;
+  mongoOptions.pass = config.get('database').password;
+}
+
+if (config.get('database').ssl == true) {
+  mongoOptions.ssl = true;
+  mongoOptions.sslKey =   fs.readFileSync(config.get('database').sslKeyPath);
+  mongoOptions.sslCert =  fs.readFileSync(config.get('database').sslCertPath);
+  mongoOptions.sslCA =    fs.readFileSync(config.get('database').sslCAPath);
+}
+
+mongoose.connect(`mongodb://${mongoHostname}:${mongoPort}/`, mongoOptions);
+
 if(isProduction){
-  mongoose.connect(process.env.MONGODB_URI);
-} else {
-  mongoose.connect('mongodb://localhost/conduit');
   mongoose.set('debug', true);
 }
 

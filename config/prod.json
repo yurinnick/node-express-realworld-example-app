@@ -1,0 +1,14 @@
+{
+  "application": {
+    "port": 3000
+  },
+  "database": {
+    "hostname": "localhost",
+    "port": 27017,
+    "db_name": "nodeapp",
+    "auth": true,
+    "username": "nodeapp",
+    "username": "nodeappP@S$word",
+    "ssl": false
+  }
+}
