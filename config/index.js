@@ -48,23 +48,28 @@ const config = convict({
     },
     username: {
       format: '*',
+      default: null,
       env: 'DB_USERNAME'
     },
     password: {
       format: '*',
+      default: null,
       env: 'DB_PASSWORD',
       sensitive: true
     },
     sslKeyPath: {
       format: '*',
+      default: null,
       env: 'DB_SSL_KEY_PATH'
     },
     sslCertPath: {
       format: '*',
+      default: null,
       env: 'DB_SSL_CERT_PATH'
     },
     sslCAPath: {
       format: '*',
+      default: null,
       env: 'DB_SSL_CA_PATH'
     }
    }
