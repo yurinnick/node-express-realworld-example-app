@@ -6,7 +6,44 @@
     "description": "Collection for testing the Conduit API\n\nhttps://github.com/gothinkster/realworld",
     "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
   },
-  "item": [{
+  "item": [
+    {
+      "name": "Healthcheck",
+      "description": "",
+      "item": [{
+        "name": "Healthcheck OK",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "var responseJSON = JSON.parse(responseBody);",
+                "",
+                "tests['Response contains \"Status\" property'] = responseJSON.hasOwnProperty('status');",
+                "",
+                "var status = responseJSON.status || {};",
+                "",
+                "tests['Status is \"UP\"'] = status == 'UP';",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "url": "{{apiUrl}}/health",
+            "method": "GET",
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json",
+                "description": ""
+              }
+            ],
+            "body": { "Status": "UP" },
+            "description": ""
+          },
+        "response": []
+      }]
+    },
+    {
       "name": "Auth",
       "description": "",
       "item": [{
