@@ -6,10 +6,19 @@ router.get('/health', function(req, res, next) {
 });
 
 router.get('/status', function(req, res, next) {
-  dbStatus = !!mongoose.connection.readyState ? 'Running' : 'Connection failed'
-  res.json({
-    api: 'Running',
-    database: dbStatus
+  apiStatus = true
+  dbStatus = !!mongoose.connection.readyState
+
+  globalStatus = apiStatus && dbStatus
+  statusCode = globalStatus ? 200 : 500
+
+  function stringStatus(status, failMessage) {
+    return status ? 'Running' : failMessage
+  }
+
+  res.status(statusCode).json({
+    api: stringStatus(apiStatus, 'Some APIs might not be available'),
+    database: stringStatus(dbStatus, 'Connection Failed')
   });
 });
 
