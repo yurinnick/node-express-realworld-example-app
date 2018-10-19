@@ -37,7 +37,40 @@
                 "description": ""
               }
             ],
-            "body": { "Status": "UP" },
+            "description": ""
+          },
+        "response": []
+      },
+      {
+        "name": "Status check",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "var responseJSON = JSON.parse(responseBody);",
+                "",
+                "tests['Response contains \"api\" property'] = responseJSON.hasOwnProperty('api');",
+                "tests['Response contains \"database\" property'] = responseJSON.hasOwnProperty('database');",
+                "",
+                "var api_status = responseJSON.api || {};",
+                "var db_status = responseJSON.database || {};",
+                "",
+                "tests['Api status is \"Running\"'] = api_status == 'Running';",
+                "tests['Database status is \"Running\"'] = db_status == 'Running';",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "url": "{{apiUrl}}/status",
+            "method": "GET",
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json",
+                "description": ""
+              }
+            ],
             "description": ""
           },
         "response": []
