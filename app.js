@@ -7,13 +7,13 @@ var http = require('http'),
     cors = require('cors'),
     passport = require('passport'),
     errorhandler = require('errorhandler'),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
     config = require('./config/index.js');
 
-var isProduction = process.env.NODE_ENV === 'production';
+var isProduction = config.get('env') === 'prod';
 
 // Create global app object
-var app = express();
+var app = module.exports = express();
 
 app.use(cors());
 
@@ -31,37 +31,11 @@ if (!isProduction) {
   app.use(errorhandler());
 }
 
-console.log(config.get('database'))
-
-const mongoHostname = config.get('database').hostname;
-const mongoPort = config.get('database').port;
-const mongoOptions = {
-  dbName: config.get('database').db_name,
-  useNewUrlParser: true
-};
-
-if (config.get('database').auth) {
-  mongoOptions.user = config.get('database').username;
-  mongoOptions.pass = config.get('database').password;
-}
-
-if (config.get('database').ssl) {
-  mongoOptions.ssl = true;
-  mongoOptions.sslKey =   fs.readFileSync(config.get('database').sslKeyPath);
-  mongoOptions.sslCert =  fs.readFileSync(config.get('database').sslCertPath);
-  mongoOptions.sslCA =    fs.readFileSync(config.get('database').sslCAPath);
-}
-
-mongoose.connect(`mongodb://${mongoHostname}:${mongoPort}/`, mongoOptions);
-
-if(isProduction){
-  mongoose.set('debug', true);
-}
-
 require('./models/User');
 require('./models/Article');
 require('./models/Comment');
 require('./config/passport');
+require('./database');
 
 app.use(require('./routes'));
 
@@ -71,8 +45,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
-/// error handlers
 
 // development error handler
 // will print stacktrace
@@ -100,6 +72,8 @@ app.use(function(err, req, res, next) {
 });
 
 // finally, let's start our server...
-var server = app.listen( process.env.PORT || 3000, function(){
-  console.log('Listening on port ' + server.address().port);
+app.on('ready', function() {
+  var server = app.listen( process.env.PORT || 3000, function(){
+    console.log('Listening on port ' + server.address().port);
+  });
 });
