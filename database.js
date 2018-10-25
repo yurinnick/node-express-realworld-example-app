@@ -11,12 +11,13 @@ if (!isProduction) {
 
 const mongoHostname = config.get('database').hostname;
 const mongoPort = config.get('database').port;
-const mongoUrl = `mongodb://${mongoHostname}:${mongoPort}/`
+const mongoDatabase = config.get('database').db_name;
+
+const mongoUrl = `mongodb://${mongoHostname}:${mongoPort}/${mongoDatabase}`
 const mongoWaitConnTimeout = 10 // in seconds
 const mongoLogLevel = config.get('database').logLevel
 
 const mongoOptions = {
-  dbName: config.get('database').db_name,
   useNewUrlParser: true,
   autoReconnect: true,
   reconnectTries: Number.MAX,
@@ -27,14 +28,14 @@ const mongoOptions = {
 if (config.get('database').auth) {
   mongoOptions.user = config.get('database').username;
   mongoOptions.pass = config.get('database').password;
-}
+};
 
 if (config.get('database').ssl) {
   mongoOptions.ssl = true;
   mongoOptions.sslKey =   fs.readFileSync(config.get('database').sslKeyPath);
   mongoOptions.sslCert =  fs.readFileSync(config.get('database').sslCertPath);
   mongoOptions.sslCA =    fs.readFileSync(config.get('database').sslCAPath);
-}
+};
 
 mongoose.connect(mongoUrl, mongoOptions);
 var db = mongoose.connection;
