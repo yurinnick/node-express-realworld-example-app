@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 var app = require('./app');
 var isProduction = config.get('env') === 'prod';
 
-if(isProduction){
+if (!isProduction) {
   mongoose.set('debug', true);
 }
 
@@ -13,13 +13,15 @@ const mongoHostname = config.get('database').hostname;
 const mongoPort = config.get('database').port;
 const mongoUrl = `mongodb://${mongoHostname}:${mongoPort}/`
 const mongoWaitConnTimeout = 10 // in seconds
+const mongoLogLevel = config.get('database').logLevel
 
 const mongoOptions = {
   dbName: config.get('database').db_name,
   useNewUrlParser: true,
   autoReconnect: true,
   reconnectTries: Number.MAX,
-  reconnectInterval: 500
+  reconnectInterval: 500,
+  loggerLevel: mongoLogLevel
 };
 
 if (config.get('database').auth) {

@@ -71,6 +71,11 @@ const config = convict({
       format: '*',
       default: null,
       env: 'DB_SSL_CA_PATH'
+    },
+    logLevel: {
+      format: ['info', 'error', 'debug'],
+      default: 'error',
+      env: 'DB_LOG_LEVEL'
     }
    }
 });
