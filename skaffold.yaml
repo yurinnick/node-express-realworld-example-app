@@ -4,7 +4,7 @@ build:
   tagPolicy:
     gitCommit: {}
   artifacts:
-    - image: demo/realworld-backend
+    - image: org/realworld-backend
       context: .
       docker:
         dockerfile: Dockerfile
@@ -16,6 +16,6 @@ deploy:
       - name: realworld-backend
         chartPath: ../kubernetes-quick-start/helms/realworld-backend
         values:
-          realworld-backend.image: demo/realworld-backend
+          realworld-backend.image: org/realworld-backend
         imageStrategy:
           helm: {}
