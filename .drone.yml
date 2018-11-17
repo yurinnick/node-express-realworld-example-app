@@ -1,14 +1,26 @@
-kind: pipeline
-name: default
+# kind: pipeline
+# name: default
 
-steps:
-- name: realworld-mongo
-  image: mongo
-  detach: true
+# steps:
+# - name:
+#   image: mongo
+#   detach: true
 
-- name: test
-  image: node:11.1-alpine
-  commands:
-    - npm install
-    - npm start &
-    - npm test
+# - name: test
+#   image: node:11.1-alpine
+#   commands:
+#     - npm install
+#     - npm start &
+#     - npm test
+
+pipeline:
+  realworld-mongo:
+    image: mongo
+    detach: true
+
+  test:
+    image: node:11.1-alpine
+    commands:
+      - npm install
+      - npm start &
+      - npm test
